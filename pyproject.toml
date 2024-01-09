@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "api-well-practice"
+version = "0.1.0"
+description = "E-comerce API developed following the well practice of API."
+authors = ["Julio Quintero <jequinterope@unal.edu.co>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.108.0"
+uvicorn = {version = "0.25.0", extras = ["standard"]}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
