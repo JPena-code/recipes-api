@@ -1,15 +1,28 @@
-[tool.poetry]
+[project]
 name = "api-well-practice"
-version = "0.1.0"
+version = "0.0.1"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
-description = "E-comerce API developed following the well practice of API."
-authors = ["Julio Quintero <jequinterope@unal.edu.co>"]
+keywords = ["FastAPI", "Supabase", "Learning"]
+authors = [{ email = "jequinterope@unal.edu.co" }]
+readme = {file = "README.md", content-type = "text/markdown"}
+
+
+[tool.poetry]
+license = "MIT"
+version = "0.0.1"
 readme = "README.md"
+name = "api-well-practice"
+keywords = ["FastAPI", "Supabase"]
+authors = ["Julio Quintero <jequinterope@unal.edu.co>"]
+repository = "https://github.com/JPena-code/recipes-api"
+description = "E-comerce API developed following the well practice of API."
+
 
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "0.108.0"
-uvicorn = {version = "0.25.0", extras = ["standard"]}
+uvicorn = { version = "0.25.0", extras = ["standard"] }
 
 
 [build-system]
