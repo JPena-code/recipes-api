@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "api-well-practice"
 version = "0.1.0"
+requires-python = ">=3.10"
 description = "E-comerce API developed following the well practice of API."
 authors = ["Julio Quintero <jequinterope@unal.edu.co>"]
 readme = "README.md"
