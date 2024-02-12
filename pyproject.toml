@@ -21,7 +21,7 @@ description = "E-comerce API developed following the well practice of API."
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "0.109.1"
+fastapi = "^0.109.2"
 uvicorn = { version = "0.25.0", extras = ["standard"] }
 
 
