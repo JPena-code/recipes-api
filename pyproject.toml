@@ -1,5 +1,5 @@
 [project]
-name = "api-well-practice"
+name = "app"
 version = "0.0.1"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -9,10 +9,10 @@ readme = {file = "README.md", content-type = "text/markdown"}
 
 
 [tool.poetry]
+name = "app"
 license = "MIT"
 version = "0.0.1"
 readme = "README.md"
-name = "api-well-practice"
 keywords = ["FastAPI", "Supabase"]
 authors = ["Julio Quintero <jequinterope@unal.edu.co>"]
 repository = "https://github.com/JPena-code/recipes-api"
@@ -23,7 +23,16 @@ description = "E-comerce API developed following the well practice of API."
 python = "^3.10"
 fastapi = "^0.109.2"
 uvicorn = { version = "0.25.0", extras = ["standard"] }
+supabase = "2.3.2"
+pydantic-settings = "2.1.0"
+pydantic = { version = "2.5.3", extras = ["email"] }
+python-multipart = "0.0.6"
+pyjwt = "2.8.0"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.0.0"
+pytest-cov = "4.1.0"
 
 [build-system]
 requires = ["poetry-core"]

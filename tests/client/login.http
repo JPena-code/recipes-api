@@ -1,0 +1,25 @@
+@host=http://localhost
+@port=8000
+
+# @name login
+# @prompt email
+# @prompt password
+POST {{host}}:{{port}}/api/login HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+
+###
+# @name refresh
+POST {{host}}:{{port}}/api/token/refresh HTTP/1.1
+authorization: Bearer {{$dotenv TOKEN}}
+content-Type: application/x-www-form-urlencoded
+accept: application/json
+
+grant_type=refresh_token
+&refresh_token={{$dotenv REFRESH_TOKEN}}

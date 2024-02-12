@@ -1,0 +1,32 @@
+@host=http://localhost
+@port=8000
+@endpoint=/api/v1.0/categories
+
+# @name categories
+GET {{host}}:{{port}}{{endpoint}} HTTP/1.1
+Accept: application/json
+
+###
+# @name addCategory
+POST {{host}}:{{port}}{{endpoint}} HTTP/1.1
+Authorization: Bearer {{$dotenv TOKEN}}
+Content-Type: application/json
+
+{
+    "name": "TestCategory"
+}
+
+###
+# @name updateCategory
+PATCH {{host}}:{{port}}{{endpoint}}/{{addCategory.response.body.data.id}}
+Content-Type: application/json
+Authorization: Bearer {{$dotenv TOKEN}}
+
+{
+    "name": "TestCategoryUpdated"
+}
+
+###
+# @name delteCategory
+DELETE {{host}}:{{port}}{{endpoint}}/235aa4fd-4d7d-403c-92b7-827ada7fa3ec HTTP/1.1
+Accept: application/json

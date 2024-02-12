@@ -1,0 +1,33 @@
+@host=http://localhost
+@port=8000
+
+@endPoint=/api/v1.0/tags
+
+@tagID=e3aa075e-c064-4e24-bc8a-6d5978fe9f85
+
+# @name creteTag
+POST {{host}}:{{port}}{{endPoint}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{$dotenv TOKEN}}
+
+{
+    "name": "TestTag"
+}
+
+###
+# @name tag
+GET {{host}}:{{port}}{{endPoint}}/{{tagID}} HTTP/1.1
+Content-Type: application/json
+
+###
+GET {{host}}:{{port}}{{endPoint}}?limit=4&page=1 HTTP/1.1
+Content-Type: application/json
+
+###
+@tagTest = {{creteTag.response.body.data.id}}
+
+# @name deleteTag
+DELETE {{host}}:{{port}}{{endPoint}}/{{tagTest}}
+Authorization: Bearer {{$dotenv TOKEN}}
+Content-Type: application/json

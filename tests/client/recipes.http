@@ -1,0 +1,7 @@
+@host=http://localhost
+@port=8000
+@endpoint=/api/v1.0/recipes
+
+# @name allRecipes
+GET {{host}}:{{port}}{{endpoint}} HTTP/1.1
+Accept: application/json
