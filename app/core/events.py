@@ -5,16 +5,20 @@ from fastapi import FastAPI
 from postgrest.exceptions import APIError
 
 from app.db import Repository
+from app.logging import logger
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print('Starting admin client session')
+    logger.info('Supabase admin client session')
     try:
+
         await Repository.init_admin()
         yield
     except APIError as error:
-        print(error.hint)
-        print(error.code)
+        logger.error(
+            'Cannot start Supabase admin client "%s - %s"',
+            error.code, error.details
+        )
     finally:
         await Repository.close_admin()

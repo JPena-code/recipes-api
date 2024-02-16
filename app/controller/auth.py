@@ -1,3 +1,5 @@
+from collections.abc import AsyncGenerator
+
 from jwt import ExpiredSignatureError
 
 from pydantic import UUID4
@@ -8,6 +10,7 @@ from gotrue import AuthResponse
 from gotrue.errors import AuthApiError
 
 from app.db import Repository
+from app.logging import logger
 from app.schemas.auth import Token, TokenPayload
 from app.schemas.response import ControllerResponse
 from app.core.deps.auth import LoginForm, HTTPCredentials, RefreshTokenForm
@@ -22,8 +25,8 @@ def current_user(auth: HTTPCredentials) -> UUID4 | None:
     try:
         payload: TokenPayload = TokenPayload.decode_token(token)
         user = payload.sub
-    except ExpiredSignatureError as expired:
-        print(expired)
+    except ExpiredSignatureError:
+        pass
     return user
 
 class _AuthController:
@@ -41,7 +44,7 @@ class _AuthController:
     def __init__(self) -> None:
         self._repo = Repository
 
-    async def auth_client(self, auth: HTTPCredentials) -> AsyncClient | None:
+    async def auth_client(self, auth: HTTPCredentials) -> AsyncGenerator[AsyncClient, None, None]:
         if auth is None:
             yield None
         token = auth.credentials
@@ -56,8 +59,10 @@ class _AuthController:
             }
             yield client
         except APIError as error:
-            print('Algo salio mal')
-            print(error.details)
+            logger.error(
+                'Cannot set Supabase auth client "%s - %s"',
+                error.code,
+                error.message,)
         finally:
             if client:
                 await client.postgrest.aclose()
@@ -84,15 +89,17 @@ class _AuthController:
                     refresh_token=form_refresh.refresh_token,
                     expires_at=payload.exp,
                     token_type='bearer')
-            except ExpiredSignatureError as expired:
-                print(expired)
+            except ExpiredSignatureError:
+                pass
         if new_token is None and response.success:
-            print('No token provided refreshing it')
             try:
                 response_db: AuthResponse = await self._repo.admin.auth.refresh_session(form_refresh.refresh_token)
                 new_token = Token.model_validate(response_db.session, from_attributes=True)
             except AuthApiError as error:
-                print(error)
+                logger.error(
+                    'Cannot set Supabase auth client "%s - %s"',
+                    error.status,
+                    error.message,)
                 response.success = False
         response.data = new_token
         return response
@@ -109,7 +116,9 @@ class _AuthController:
             )
             response.data = Token.model_validate(sign_in.session, from_attributes=True)
         except AuthApiError as error:
-            print(error.message)
-            print(error.status)
+            logger.error(
+                'Cannot set Supabase auth client "%s - %s"',
+                error.status,
+                error.message,)
             response.success = False
         return response

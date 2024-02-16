@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import status, Depends, Body
 from fastapi import APIRouter, Request, UploadFile
 
+from app.logging import logger
 from app.utils import PathID, ImageFile
 from app.controller import RecipesController
 from app.core.deps import Anon, Client, User
@@ -23,7 +24,7 @@ from app.utils.exceptions.common import (
 
 # TODO: Make real save uploaded files
 def fake_save(file: UploadFile):
-    print('Fake saving...')
+    logger.debug('Fake saving "%s"', file.filename)
     return f'http://localhost:8000/{file.filename}'
 
 Responses = Response[list[RecipeOut] | RecipeOut | dict]

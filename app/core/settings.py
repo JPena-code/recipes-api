@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Project Settings and sensitive variables"""
     PROJECT_NAME: str = Field(default='API Recipe e-commerce', )
-    VERSION: str = Field('0.1.0', )
+    VERSION: str = Field('0.0.1', )
     DEBUG: bool = True
 
     ALGORITHM: str = 'HS256'

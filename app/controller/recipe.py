@@ -6,6 +6,7 @@ from pydantic_core import ValidationError
 from postgrest.exceptions import APIError
 from supabase._async.client import AsyncClient
 
+from app.logging import logger
 from app.controller.base import BaseController
 from app.schemas.response import ControllerResponse
 from app.utils import MultipleResponse, SingleResponse
@@ -47,10 +48,19 @@ class _RecipesController(
             response_db: Recipe = await client.rpc(self._rcp_insert, {
                 'recipe_json': model.model_dump(mode='json')
             }).execute()
-        except APIError as error:
-            print('Error at the DB API request')
-            print(error.details)
-            print(error.message)
+        except (APIError, ValidationError) as error:
+            if isinstance(error, APIError):
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
+            else:
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
         if not response_db.data:
@@ -83,14 +93,18 @@ class _RecipesController(
             #     query.eq('tags.id', params.tag)
             response_db: Recipes = await query.execute()
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -98,15 +112,17 @@ class _RecipesController(
             response.success = False
             return response
         try:
-            print(response_db.data)
             response.data = [
                 RecipeOut.model_validate(record, from_attributes=True)
                 for record in response_db.data
             ]
             response.count = response_db.count
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                'Validation Error "%s" total "%d"',
+                error.title,
+                error.error_count()
+            )
             response.success= False
         return response
 
@@ -122,14 +138,18 @@ class _RecipesController(
             if not response.count:
                 return None
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -142,8 +162,11 @@ class _RecipesController(
             response.count = 1
             response.data = model_out
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                'Validation Error "%s" total "%d"',
+                error.title,
+                error.error_count()
+            )
             response.success= False
         return response
 
@@ -156,10 +179,11 @@ class _RecipesController(
                 .execute()
             response.count = response_db.count
         except APIError as error:
-            # TODO: Change to logging
-            print('Error at the DB API request')
-            print(error.details)
-            print(error.message)
+            logger.error(
+                'Error at the DB API request "%s - %s"',
+                error.code,
+                error.message
+            )
             response.success = False
             return response
         return response

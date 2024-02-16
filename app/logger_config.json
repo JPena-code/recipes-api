@@ -1,0 +1,50 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "console": {
+            "()": "uvicorn.logging.DefaultFormatter",
+            "fmt": "[%(name)s|%(module)s|%(lineno)s] [%(asctime)s] %(levelprefix)s %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S%Z"
+        },
+        "file": {
+            "fmt": "[%(name)s|%(module)s|%(funcName)s|%(lineno)s] [%(asctime)s] %(levelprefix)s %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S%Z"
+        }
+    },
+    "handlers": {
+        "stdout": {
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+            "stream": "ext://sys.stdout"
+        },
+        "db": {
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+            "stream": "ext://sys.stdout"
+        }
+    },
+    "loggers": {
+        "uvicorn": {
+            "level": "INFO",
+            "handlers": [
+                "stdout"
+            ],
+            "propagate": false
+        },
+        "fastapi": {
+            "level": "INFO",
+            "handlers": [
+                "stdout"
+            ],
+            "propagate": false
+        },
+        "httpx": {
+            "level": "INFO",
+            "handlers": [
+                "stdout"
+            ],
+            "propagate": false
+        }
+    }
+}

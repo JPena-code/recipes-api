@@ -6,7 +6,6 @@ from app.core.events import lifespan
 from app.core.settings import settings
 from app.utils.exceptions.handlers import validation_error
 
-# TODO: Unified loggings
 
 app = FastAPI(
     lifespan=lifespan,

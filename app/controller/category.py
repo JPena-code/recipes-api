@@ -6,6 +6,7 @@ from pydantic_core import ValidationError
 from postgrest.exceptions import APIError
 from supabase._async.client import AsyncClient
 
+from app.logging import logger
 from app.controller.base import BaseController
 from app.schemas.response import ControllerResponse
 from app.utils import MultipleResponse, SingleResponse
@@ -51,14 +52,18 @@ class _CategoriesController(
                     count='exact')\
                 .execute()
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -71,8 +76,11 @@ class _CategoriesController(
             response.count = response_db.count
             response.data = model_out
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                    'Validation Error "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success= False
         return response
 
@@ -87,14 +95,18 @@ class _CategoriesController(
                 .eq('id', model.id)\
                 .execute()
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -107,8 +119,11 @@ class _CategoriesController(
             response.count = response_db.count
             response.data = model_out
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                    'Validation Error "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success= False
         return response
 
@@ -126,14 +141,18 @@ class _CategoriesController(
                 query.like('name', f'%{params.name}%')
             response_db: Categories = await query.execute()
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -148,8 +167,11 @@ class _CategoriesController(
             ]
             response.count = response_db.count
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                'Validation Error "%s" total "%d"',
+                error.title,
+                error.error_count()
+            )
             response.success= False
         return response
 
@@ -165,14 +187,18 @@ class _CategoriesController(
                 .single()\
                 .execute()
         except (APIError, ValidationError) as error:
-            # TODO: Change to logging
             if isinstance(error, APIError):
-                print('Error at the DB API request')
-                print(error.details)
-                print(error.message)
+                logger.error(
+                    'Error at the DB API request "%s - %s"',
+                    error.code,
+                    error.message
+                )
             else:
-                print('Validation Error at cats data from DB')
-                print(error.errors())
+                logger.debug(
+                    'Validation Error at cats data from DB "%s" total "%d"',
+                    error.title,
+                    error.error_count()
+                )
             response.success = False
             return response
 
@@ -185,8 +211,11 @@ class _CategoriesController(
             response.count = 1
             response.data = model_out
         except ValidationError as error:
-            print(f'Validation error, total of errors {error.error_count()}')
-            print(error.errors())
+            logger.debug(
+                'Validation Error "%s" total "%d"',
+                error.title,
+                error.error_count()
+            )
             response.success= False
         return response
 
@@ -199,10 +228,11 @@ class _CategoriesController(
                 .execute()
             response.count = response_db.count
         except APIError as error:
-            # TODO: Change to logging
-            print('Error at the DB API request')
-            print(error.details)
-            print(error.message)
+            logger.error(
+                'Error at the DB API request "%s - %s"',
+                error.code,
+                error.message
+            )
             response.success = False
             return response
         return response

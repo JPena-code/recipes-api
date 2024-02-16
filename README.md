@@ -232,5 +232,5 @@ The application consist of the following basic **endpoints** as a starting point
 - [ ] Deployment
 - [ ] TODO
   - [ ] Use alias with pydantic
-  - [ ] Unified Logging
+  - [x] Unified Logging
   - [ ] Standard errors **handlers** system

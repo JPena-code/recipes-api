@@ -1,7 +1,8 @@
-from .settings import settings
 from . import deps
+from .settings import settings
 
 
 __all__ = [
-    'settings',
+    'deps',
+    'settings'
 ]
